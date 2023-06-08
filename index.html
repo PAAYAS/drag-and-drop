@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Drag & Drop</title>
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #9eccf7;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    h1{
+        font-size: 36px;
+        color: #ffffff;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 40px;
+        text-shadow: 2px 2px 4px rgb(0,0,0,0.3);
+    }
+
+    .container-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      width: 200px;
+      height: 300px;
+      background-color: #ffffff;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-right: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 70px;
+      height: 70px;
+      background-color: #ffffff;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      margin: 5px;
+      padding: 10px;
+      cursor: move;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .item img {
+      max-width: 50px;
+      max-height: 50px;
+    }
+
+    .item.success {
+      background-color: #aaf2aa;
+      border-color: #5cd65c;
+    }
+
+    .reset-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ffffff;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .reset-btn:hover{
+        background-color: #ccc;
+    }
+
+    #message {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    @media screen and (max-width: 600px) {
+      .container-wrapper {
+        flex-direction: column;
+        align-items: center;
+      }
+
+    .container {
+        margin-right: 0;
+        margin-bottom: 20px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+    <h1>Drag & Drop Items</h1>
+    <div class="container-wrapper">
+        <div class="container" id="container1">
+            <div class="item" draggable="true" ondragstart="drag(event)" id="item1">
+            <img src="image1.jpg" alt="Image 1">
+            </div>
+
+            <div class="item" draggable="true" ondragstart="drag(event)" id="item4">
+            <span>Text</span>
+            </div>
+            <div class="item" draggable="true" ondragstart="drag(event)" id="item5">
+            <span>Icon</span>
+            </div>
+        </div>
+        <div class="container" id="container2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+
+  <button class="reset-btn" onclick="resetContainers()">Reset</button>
+  <script>
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    function drag(event) {
+      event.dataTransfer.setData("text", event.target.id);
+    }
+
+    function drop(event) {
+      event.preventDefault();
+      var data = event.dataTransfer.getData("text");
+      var draggedItem = document.getElementById(data);
+      var container = document.getElementById("container2");
+
+      container.appendChild(draggedItem);
+      draggedItem.classList.add("success");
+      showMessage("Item successfully dropped!");
+
+      // Optional: If you want to remove the dragged item from the first container, uncomment the line below
+      // draggedItem.parentNode.removeChild(draggedItem);
+    }
+
+    function resetContainers() {
+      var container1 = document.getElementById("container1");
+      var container2 = document.getElementById("container2");
+
+      // Clear container2
+      while (container2.firstChild) {
+        container2.firstChild.classList.remove("success");
+        container1.appendChild(container2.firstChild);
+      }
+
+      showMessage("");
+    }
+
+    function showMessage(message) {
+        var messageElement = document.getElementById("message");
+        if (!messageElement) {
+            messageElement = document.createElement("div");
+            messageElement.id = "message";
+            document.body.appendChild(messageElement);
+        }
+        messageElement.innerText = message;
+    }
+  </script>
+</body>
+</html>
